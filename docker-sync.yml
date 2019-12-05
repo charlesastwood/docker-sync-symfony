@@ -1,0 +1,22 @@
+version: '2'
+
+options:
+  verbose: true
+  compose-file-path: 'docker-compose.yml'
+
+syncs:
+  app-project-sync:
+    sync_strategy: 'unison'
+    src: '.'
+    sync_excludes: ["vendor", "var", ".idea", ".data", ".git", "node_modules", ".docker-sync"]
+    sync_args: ['-perms=0', '-prefer newer']
+  vendors-project-sync:
+    sync_strategy: 'unison'
+    src: './vendor/'
+    sync_excludes: ["bin"]
+    sync_args: ['-perms=0', '-prefer newer']
+  var-project-sync:
+    src: './var/'
+    sync_strategy: 'unison'
+    sync_args: ['-perms=0', '-prefer newer']
+    sync_excludes: ["cache", "logs", "sessions"]

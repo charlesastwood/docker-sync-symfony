@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+  nginx:
+    build: docker/nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes_from:
+      - php
+  php:
+    build:
+      context: docker/php7-fpm
+      args:
+        TIMEZONE: Europe/London
+    shm_size: '2gb'
+    volumes:
+      - ./:/var/www/symfony
+      - ./.composer:/root/.composer/:cached
+      - ./logs/symfony:/var/www/symfony/app/logs
+  db:
+    image: mysql:5
+    ports:
+      - 3306:3306
+    volumes:
+      - "./.data/db:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DOCKER_MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DOCKER_MYSQL_DATABASE}
+      MYSQL_USER: ${DOCKER_MYSQL_USER}
+      MYSQL_PASSWORD: ${DOCKER_MYSQL_PASSWORD}
